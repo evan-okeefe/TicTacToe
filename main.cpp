@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -28,7 +29,7 @@ void printBoard() {
 }
 
 bool markSpot(int row, int col) {
-    if (row >= 3 || col >=3) {
+    if ((row >= 3 || col >=3) || (row < 0 || col < 0)) {
         return false;
     }
     if (board[row][col] == 0) {
@@ -65,6 +66,22 @@ bool checkBoard() {
     return false;
 }
 
+int getIntegerInput(const string& prompt) {
+    int value;
+    while (true) {
+        cout << prompt;
+        string line;
+        getline(cin, line);
+
+        stringstream ss(line);
+        if (ss >> value && ss.eof()) {
+            return value;
+        } else {
+            cout << "Invalid input. Please enter an integer.\n";
+        }
+    }
+}
+
 int main() {
     cout << "TIC TAC TOE!\n";
     cout << "\n";
@@ -74,20 +91,21 @@ int main() {
             cout << "Player 1 turn";
             cout << "\n";
             cout << "Make your selection (Row then Column starting at 0 and going to 2)\n";
-            int row, column;
 
-            cin >> row;
-            cin >> column;
+            int row = getIntegerInput("Enter row (0-2): ");
+            int column = getIntegerInput("Enter column (0-2): ");
+
 
             if (!markSpot(row, column)) {
                 cout << "Invalid selection, please select an empty space in the range of the board \n";
             }
-
-            if (checkBoard()) {
-                finished = true;
-            }
             else {
-                playerTurn = !playerTurn;
+                if (checkBoard()) {
+                    finished = true;
+                }
+                else {
+                    playerTurn = !playerTurn;
+                }
             }
         }
         else {
@@ -95,24 +113,23 @@ int main() {
             cout << "Player 2 turn";
             cout << "\n";
             cout << "Make your selection (Row then Column starting at 0 and going to 2)\n";
-            int row, column;
 
-            cin >> row;
-            cin >> column;
+            int row = getIntegerInput("Enter row (0-2): ");
+            int column = getIntegerInput("Enter column (0-2): ");
 
             if (!markSpot(row, column)) {
                 cout << "Invalid selection, please select an empty space in the range of the board \n";
             }
-
-            if (checkBoard()) {
-                finished = true;
-            }
             else {
-                playerTurn = !playerTurn;
+                if (checkBoard()) {
+                    finished = true;
+                }
+                else {
+                    playerTurn = !playerTurn;
+                }
             }
         }
     }
-
     playerTurn ? cout << "Player 1 wins" : cout << "Player 2 wins";
 
 }
